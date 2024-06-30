@@ -1,8 +1,10 @@
 {
-	"name": "issues-with-my-repos",
+	"name": "repo-overseer",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"@octokit/openapi-types": "^22.2.0",
+		"@octokit/request": "^9.1.1",
 		"@types/node": "^16.18.101",
 		"@types/react": "^18.3.3",
 		"@types/react-dom": "^18.3.0",
