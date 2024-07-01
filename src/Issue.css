@@ -1,4 +1,4 @@
-.issue {
+.issue:not(:first-child) {
 	padding-top: 0.75em;
 	border-top: 1px solid black;
 }
