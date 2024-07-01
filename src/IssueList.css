@@ -1,3 +1,8 @@
+#search {
+	display: flex;
+	justify-content: space-between;
+}
+
 #search input {
 	padding: 4px 8px;
 	border: 1px solid #444;
@@ -11,6 +16,19 @@
 	border-radius: 4px;
 }
 
+.login-actions {
+	display: inline-block;
+	margin-left: 0.75em;
+}
+
+#search .link-button {
+	border: none;
+	background: none;
+	text-decoration: underline;
+	margin: 0;
+	padding: 0;
+}
+
 #tabs {
 	display: flex;
 	margin-top: 2em;
@@ -21,7 +39,6 @@
 	background: none;
 	font: inherit;
 	padding: 4px 0.5em;
-	margin: 0;
 	border-top: 1px solid transparent;
 	border-bottom: 1px solid black;
 }
