@@ -1,11 +1,12 @@
 :root {
-	--separator-color: #fff;
+	--separator-color: #616161;
 	--input-border-color: #666;
 	--background: #222;
 	--button-background: #555;
 	--color: #fff;
 	--input-background: #111;
 	--link-color: #5e9aff;
+	--color-dimmer: #d9d9d9;
 }
 
 body {

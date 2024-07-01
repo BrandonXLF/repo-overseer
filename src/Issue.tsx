@@ -12,10 +12,10 @@ export default function Issue({ item }: Readonly<{
 	item: components['schemas']['issue-search-result-item']
 }>) {
 	return <div className="issue">
-		<div>
+		<div className="issue-title">
 			<a href={item.html_url}>{item.title}</a>
 		</div>
-		<div>
+		<div className="issue-info">
 			#{item.number} opened on {formatDate(item.created_at)} by {item.user?.login}.
 			Last updated {formatDate(item.updated_at)}.
 		</div>
