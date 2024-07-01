@@ -123,6 +123,12 @@ export default function IssueList() {
 		})();
 	}, [auth]);
 
+	// Replace empty repo owner with logged-in user
+	useEffect(() => {
+		if (owner || !user) return;
+		setOwner(user);
+	}, [owner, user])
+
 	// Save authorization token
 	useEffect(() => {
 		localStorage.setItem('repo-overseer-auth', auth);
