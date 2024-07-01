@@ -1,27 +1,30 @@
-#search {
+#actions {
 	display: flex;
 	justify-content: space-between;
+	flex-wrap: wrap-reverse;
+	column-gap: 0.5em;
+	row-gap: 0.75em;
 }
 
-#search input {
+#actions input {
 	padding: 4px 8px;
 	border: 1px solid #444;
 	border-radius: 4px;
 }
 
-#search button {
-	margin-left: 1em;
+#actions button {
 	padding: 4px 8px;
 	border: 1px solid #444;
 	border-radius: 4px;
 }
 
-.login-actions {
-	display: inline-block;
-	margin-left: 0.75em;
+#actions > * {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
 }
 
-#search .link-button {
+#actions .link-button {
 	border: none;
 	background: none;
 	text-decoration: underline;

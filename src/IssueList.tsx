@@ -179,20 +179,20 @@ export default function IssueList() {
 	} else {
 		userActions = <>
 		<button onClick={() => doAuth()}>Sign-in</button>
-		<div className="login-actions">
-		(<button
-			title="Only grant access to public repositories. Reduces the scope required, but will not show issues and pull requests in private repositories."
-			onClick={() => doAuth(true)}
-			className="link-button"
-		>
-			Grant public only
-		</button>)
+		<div>
+			(<button
+				title="Only grant access to public repositories. Reduces the scope required, but will not show issues and pull requests in private repositories."
+				onClick={() => doAuth(true)}
+				className="link-button"
+			>
+				Grant public only
+			</button>)
 		</div>
 		</>;
 	}
 
 	return <div>
-		<div id="search">
+		<div id="actions">
 			<form onSubmit={e => {
 				e.preventDefault();
 				setRepoOwner(inputRef.current?.value ?? '')
