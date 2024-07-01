@@ -60,6 +60,8 @@ export default function IssueList() {
 			return;
 		}
 
+		setList('loading');
+
 		(async () => {
 			const res = await request('GET /search/issues', {
 				q: `user:${owner} is:open sort:updated-desc ${filter}`,
@@ -149,7 +151,7 @@ export default function IssueList() {
 			</div>
 		</div>
 		<div id="tabs">
-			{Array.isArray(list) && tabs.map(tab => {
+			{list && tabs.map(tab => {
 				return <button
 					key={tab.filter}
 					onClick={() => setFilter(tab.filter)}
