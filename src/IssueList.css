@@ -4,6 +4,7 @@
 	flex-wrap: wrap-reverse;
 	column-gap: 0.5em;
 	row-gap: 0.75em;
+	align-items: center;
 }
 
 #actions input,
@@ -15,6 +16,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.5em;
+	align-items: center;
 }
 
 #actions .link-button {
