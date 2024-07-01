@@ -136,7 +136,10 @@ export default function IssueList() {
 
 	return <div>
 		<div id="search">
-			<form onSubmit={() => setOwner(inputRef.current?.value ?? '')}>
+			<form onSubmit={e => {
+				e.preventDefault();
+				setOwner(inputRef.current?.value ?? '')
+			}}>
 				<input ref={inputRef} />
 				<button>Go</button>
 				{user && <button onClick={() => setOwner(user)} type="button">Me</button>}
