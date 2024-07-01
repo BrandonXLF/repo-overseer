@@ -39,16 +39,16 @@ const tabs = [
 export default function IssueList() {
 	const [list, setList] = useState<List>({ state: 'unset' });
 	const [filter, setFilter] = useState('');
-	const [owner, setOwner] = useState(localStorage.getItem('repo-overseer-owner') ?? '');
+	const [repoOwner, setRepoOwner] = useState(localStorage.getItem('repo-overseer-owner') ?? '');
 	const [auth, setAuth] = useState(localStorage.getItem('repo-overseer-auth') ?? '');
-	const [user, setUser] = useState('');
+	const [apiUser, setApiUser] = useState('');
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	// Set input value to initial owner
 	useEffect(() => {
 		if (!inputRef.current) return;
-		inputRef.current.value = owner;
+		inputRef.current.value = repoOwner;
 	});
 
 	// Process OAuth callbacks 
@@ -65,7 +65,7 @@ export default function IssueList() {
 
 	// Make API request for the list
 	useEffect(() => {
-		if (!owner) {
+		if (!repoOwner) {
 			setList({ state: 'unset' });
 			return;
 		}
@@ -75,7 +75,7 @@ export default function IssueList() {
 		(async () => {
 			try {
 				const res = await request('GET /search/issues', {
-					q: `user:${owner} is:open sort:updated-desc ${filter}`,
+					q: `user:${repoOwner} is:open sort:updated-desc ${filter}`,
 					headers: {
 						authorization: auth
 					}
@@ -104,7 +104,7 @@ export default function IssueList() {
 				setList(obj);
 			}
 		})();
-	}, [auth, filter, owner]);
+	}, [auth, filter, repoOwner]);
 
 	// Update user when auth changes
 	useEffect(() => {
@@ -119,15 +119,15 @@ export default function IssueList() {
 					authorization: auth
 				}
 			});
-			setUser(res.data.login);
+			setApiUser(res.data.login);
 		})();
 	}, [auth]);
 
 	// Replace empty repo owner with logged-in user
 	useEffect(() => {
-		if (owner || !user) return;
-		setOwner(user);
-	}, [owner, user])
+		if (repoOwner || !apiUser) return;
+		setRepoOwner(apiUser);
+	}, [repoOwner, apiUser])
 
 	// Save authorization token
 	useEffect(() => {
@@ -136,8 +136,8 @@ export default function IssueList() {
 
 	// Save owner
 	useEffect(() => {
-		localStorage.setItem('repo-overseer-owner', owner);
-	}, [owner]);
+		localStorage.setItem('repo-overseer-owner', repoOwner);
+	}, [repoOwner]);
 
 	let listContents;
 
@@ -168,12 +168,12 @@ export default function IssueList() {
 
 	let userActions;
 
-	if (user) {
+	if (apiUser) {
 		userActions = <>
-			{user}
+			{apiUser}
 			<button onClick={() => {
 				setAuth('');
-				setUser('');
+				setApiUser('');
 			}}>Sign-out</button>
 		</>;
 	} else {
@@ -195,11 +195,11 @@ export default function IssueList() {
 		<div id="search">
 			<form onSubmit={e => {
 				e.preventDefault();
-				setOwner(inputRef.current?.value ?? '')
+				setRepoOwner(inputRef.current?.value ?? '')
 			}}>
 				<input ref={inputRef} />
 				<button>Go</button>
-				{user && <button onClick={() => setOwner(user)} type="button">Me</button>}
+				{apiUser && <button onClick={() => setRepoOwner(apiUser)} type="button">Me</button>}
 			</form>
 			<div>
 				{userActions}
