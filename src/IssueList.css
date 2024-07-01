@@ -36,19 +36,19 @@
 	font: inherit;
 	padding: 4px 0.5em;
 	border-top: 1px solid transparent;
-	border-bottom: 1px solid var(--separator-color);
+	border-bottom: 1px solid var(--tab-color);
 	border-radius: 0;
 }
 
 .tab.selected {
 	padding: 4px 0.5em;
-	border: 1px solid var(--separator-color);
+	border: 1px solid var(--tab-color);
 	border-bottom: 1px solid transparent;
 }
 
 .filler {
 	flex: 1;
-	border-bottom: 1px solid var(--separator-color);
+	border-bottom: 1px solid var(--tab-color);
 }
 
 #issue-list {

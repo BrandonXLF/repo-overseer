@@ -1,8 +1,9 @@
 :root {
+	--tab-color: #5e9aff;
 	--separator-color: #616161;
 	--input-border-color: #666;
 	--background: #222;
-	--button-background: #555;
+	--button-background: #5e9aff;
 	--color: #fff;
 	--input-background: #111;
 	--link-color: #5e9aff;
@@ -30,14 +31,15 @@ button {
 
 button,
 input {
-	border: 1px solid var(--input-border-color);
 	border-radius: 4px;
 }
 
 button {
 	background: var(--button-background);
+	border: none;
 }
 
 input {
 	background: var(--input-background);
+	border: 1px solid var(--input-border-color);
 }
