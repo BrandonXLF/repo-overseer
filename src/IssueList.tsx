@@ -4,10 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import Issue from "./Issue";
 import './IssueList.css';
 import classNames from "classnames";
+import { RequestError } from "@octokit/request-error";
 
-type List = undefined | 'loading' | components['schemas']['issue-search-result-item'][];
+type List = {
+	state: 'unset' | 'loading';
+} | {
+	state: 'error';
+	error: string;
+	reset?: string;
+} | { 
+	state: 'loaded';
+	items: components['schemas']['issue-search-result-item'][]
+};
 
-async function dOAuth(publicOnly?: boolean) {
+async function doAuth(publicOnly?: boolean) {
 	window.open(`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&${publicOnly ? '' : 'scope=repo'}`);
 }
 
@@ -27,7 +37,7 @@ const tabs = [
 ];
 
 export default function IssueList() {
-	const [list, setList] = useState<List>();
+	const [list, setList] = useState<List>({ state: 'unset' });
 	const [filter, setFilter] = useState('');
 	const [owner, setOwner] = useState(localStorage.getItem('repo-overseer-owner') ?? '');
 	const [auth, setAuth] = useState(localStorage.getItem('repo-overseer-auth') ?? '');
@@ -56,21 +66,43 @@ export default function IssueList() {
 	// Make API request for the list
 	useEffect(() => {
 		if (!owner) {
-			setList(undefined);
+			setList({ state: 'unset' });
 			return;
 		}
 
-		setList('loading');
+		setList({ state: 'loading' });
 
 		(async () => {
-			const res = await request('GET /search/issues', {
-				q: `user:${owner} is:open sort:updated-desc ${filter}`,
-				headers: {
-					authorization: auth
+			try {
+				const res = await request('GET /search/issues', {
+					q: `user:${owner} is:open sort:updated-desc ${filter}`,
+					headers: {
+						authorization: auth
+					}
+				});
+
+				setList({
+					state: 'loaded',
+					items: res.data.items
+				});
+			} catch (e) {
+				if (!(e instanceof RequestError)) throw e;
+
+				const obj: {
+					state: 'error';
+					error: string;
+					reset?: string;
+				} = {
+					state: 'error',
+					error: e.message
+				};
+
+				if (e.message.includes('rate limit')) {
+					obj.reset = e.response?.headers['x-ratelimit-reset'] ?? '';
 				}
-			});
-		
-			setList(res.data.items);
+
+				setList(obj);
+			}
 		})();
 	}, [auth, filter, owner]);
 
@@ -103,12 +135,29 @@ export default function IssueList() {
 
 	let listContents;
 
-	if (list === undefined) {
-		listContents =<div>Search for a user above to get started!</div>;
-	} else if (list === 'loading') {
-		listContents = <div>Loading...</div>;
-	} else {
-		listContents = list.map(item => <Issue key={item.id} item={item} />);
+	switch (list.state) {
+		case 'unset':
+			listContents =<div>Search for a user above to get started!</div>;
+			break;
+		case 'loading':
+			listContents = <div>Loading...</div>;
+			break;
+		case 'loaded':
+			listContents = list.items.map(item => <Issue key={item.id} item={item} />);
+			break;
+		case 'error': {
+			const resetTime = list.reset
+				? new Intl.DateTimeFormat(navigator.language, {
+					timeStyle: 'medium'
+				}).format(new Date(+list.reset * 1000))
+				: '';
+
+			listContents = <div>
+				<h3 className="error-title">Error</h3>
+				<div>{list.error}</div>
+				{list.reset && <p>Rate limit resets at {resetTime}</p>}
+			</div>;
+		}
 	}
 
 	let userActions;
@@ -123,11 +172,11 @@ export default function IssueList() {
 		</>;
 	} else {
 		userActions = <>
-		<button onClick={() => dOAuth()}>Sign-in</button>
+		<button onClick={() => doAuth()}>Sign-in</button>
 		<div className="login-actions">
 		(<button
 			title="Only grant access to public repositories. Reduces the scope required, but will not show issues and pull requests in private repositories."
-			onClick={() => dOAuth(true)}
+			onClick={() => doAuth(true)}
 			className="link-button"
 		>
 			Grant public only

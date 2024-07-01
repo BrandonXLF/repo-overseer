@@ -60,3 +60,10 @@
 	gap: 0.75em;
 	margin-top: 1em;
 }
+
+.error-title {
+	margin: 0 0 1rem 0;
+	color: #cf2b2b;
+	font-size: 125%;
+	font-weight: bold;
+}
