@@ -7,7 +7,8 @@
 	--color: #fff;
 	--input-background: #111;
 	--link-color: #5e9aff;
-	--color-dimmer: #d9d9d9;
+	--color-dim: #d9d9d9;
+	--color-dimmer: #888;
 }
 
 body {
