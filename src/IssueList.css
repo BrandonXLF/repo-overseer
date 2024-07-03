@@ -14,40 +14,6 @@
 	align-items: center;
 }
 
-#actions .link-button {
-	border: none;
-	background: none;
-	text-decoration: underline;
-	margin: 0;
-	padding: 0;
-}
-
-#tabs {
-	margin-top: 2em;
-	display: flex;
-}
-
-.tab {
-	border: none;
-	background: var(--background);
-	font: inherit;
-	padding: 4px 0.5em;
-	border-top: 1px solid transparent;
-	border-bottom: 1px solid var(--tab-color);
-	border-radius: 0;
-}
-
-.tab.selected {
-	padding: 4px 0.5em;
-	border: 1px solid var(--tab-color);
-	border-bottom: 1px solid transparent;
-}
-
-#tab-filler {
-	flex: 1;
-	border-bottom: 1px solid var(--tab-color);
-}
-
 #issue-list {
 	display: flex;
 	flex-direction: column;
