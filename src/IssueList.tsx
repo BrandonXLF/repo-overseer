@@ -21,7 +21,7 @@ async function doAuth(publicOnly?: boolean) {
 	window.open(`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&${publicOnly ? '' : 'scope=repo'}`);
 }
 
-const tabs = [
+const types = [
 	{
 		name: 'Combined',
 		filter: ''
@@ -36,9 +36,25 @@ const tabs = [
 	}
 ];
 
+const states = [
+	{
+		name: 'Open',
+		filter: 'is:open'
+	},
+	{
+		name: 'Closed',
+		filter: 'is:closed'
+	},
+	{
+		name: 'All',
+		filter: ''
+	}
+];
+
 export default function IssueList() {
 	const [list, setList] = useState<List>({ state: 'unset' });
-	const [filter, setFilter] = useState('');
+	const [typeFilter, setTypeFilter] = useState(types[0].filter);
+	const [stateFilter, setStateFilter] = useState(states[0].filter);
 	const [repoOwner, setRepoOwner] = useState(localStorage.getItem('repo-overseer-owner') ?? '');
 	const [auth, setAuth] = useState(localStorage.getItem('repo-overseer-auth') ?? '');
 	const [apiUser, setApiUser] = useState('');
@@ -75,7 +91,7 @@ export default function IssueList() {
 		(async () => {
 			try {
 				const res = await request('GET /search/issues', {
-					q: `user:${repoOwner} is:open sort:updated-desc ${filter}`,
+					q: `user:${repoOwner} ${stateFilter} ${typeFilter} sort:updated-desc`,
 					headers: {
 						authorization: auth
 					}
@@ -104,7 +120,7 @@ export default function IssueList() {
 				setList(obj);
 			}
 		})();
-	}, [auth, filter, repoOwner]);
+	}, [auth, typeFilter, repoOwner, stateFilter]);
 
 	// Update user when auth changes
 	useEffect(() => {
@@ -205,21 +221,30 @@ export default function IssueList() {
 				{userActions}
 			</div>
 		</div>
-		<div id="tabs">
-			{list && tabs.map(tab => {
-				return <button
-					key={tab.filter}
-					onClick={() => setFilter(tab.filter)}
+		{<div id="tabs-area">
+			<div id="tabs">
+				{types.map(type => <button
+					key={type.filter}
+					onClick={() => setTypeFilter(type.filter)}
 					className={classNames({
 						tab: true,
-						selected: tab.filter === filter
+						selected: type.filter === typeFilter
 					})}
 				>
-					{tab.name}
-				</button>
-			})}
-			<div className="filler"></div>
-		</div>
+					{type.name}
+				</button>)}
+			</div>
+			<div id="filters">
+				<select
+					value={stateFilter}
+					onChange={e => setStateFilter(e.target.value)}
+				>
+					{states.map(state => <option key={state.filter} value={state.filter}>
+						{state.name}
+					</option>)}
+				</select>
+			</div>
+		</div>}
 		<div id="issue-list">
 			{listContents}
 		</div>

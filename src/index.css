@@ -4,6 +4,7 @@
 	--input-border-color: #666;
 	--background: #222;
 	--button-background: #5e9aff;
+	--select-background: #444;
 	--color: #fff;
 	--input-background: #111;
 	--link-color: #5e9aff;
@@ -21,7 +22,8 @@ body {
 
 a,
 button,
-input {
+input,
+select {
 	color: var(--color);
 }
 
@@ -31,8 +33,10 @@ button {
 }
 
 button,
-input {
+input,
+select {
 	border-radius: 4px;
+	padding: 4px 8px;
 }
 
 button {
@@ -43,4 +47,10 @@ button {
 input {
 	background: var(--input-background);
 	border: 1px solid var(--input-border-color);
+}
+
+select {
+	background: var(--select-background);
+	border: 1px solid var(--input-border-color);
+	padding: 2px 2px;
 }

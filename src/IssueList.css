@@ -7,11 +7,6 @@
 	align-items: center;
 }
 
-#actions input,
-#actions button {
-	padding: 4px 8px;
-}
-
 #actions > * {
 	display: flex;
 	flex-wrap: wrap;
@@ -27,9 +22,14 @@
 	padding: 0;
 }
 
+#tabs-area {
+	margin-top: 2em;
+	display: flex;
+	justify-content: space-between;
+}
+
 #tabs {
 	display: flex;
-	margin-top: 2em;
 }
 
 .tab {
@@ -48,9 +48,13 @@
 	border-bottom: 1px solid transparent;
 }
 
-.filler {
+#filters {
 	flex: 1;
 	border-bottom: 1px solid var(--tab-color);
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	justify-content: right;
 }
 
 #issue-list {
