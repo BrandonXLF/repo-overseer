@@ -1,6 +1,6 @@
 import { request } from "@octokit/request"
 import { components } from "@octokit/openapi-types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Issue from "./Issue";
 import './IssueList.css';
 import { RequestError } from "@octokit/request-error";
@@ -21,12 +21,18 @@ type List = {
 
 export default function IssueList() {
 	const [list, setList] = useState<List>({ state: 'unset' });
+	const [queryId, setQueryId] = useState(0);
 
 	const [typeFilter, setTypeFilter] = useState('');
 	const [stateFilter, setStateFilter] = useState('');
 	const [repoOwner, setRepoOwner] = useState('');
 	const [auth, setAuth] = useState('');
 	const [apiUser, setApiUser] = useState('');
+
+	const processNewOwner = useCallback((newOwner: string) => {
+		setRepoOwner(newOwner);
+		setQueryId(queryId => queryId + 1);
+	}, []);
 
 	useEffect(() => {
 		if (!repoOwner) {
@@ -68,7 +74,7 @@ export default function IssueList() {
 				setList(obj);
 			}
 		})();
-	}, [auth, typeFilter, repoOwner, stateFilter]);
+	}, [auth, queryId, typeFilter, repoOwner, stateFilter]);
 
 	let listContents;
 
@@ -99,7 +105,7 @@ export default function IssueList() {
 
 	return <div>
 		<div id="actions">
-			<SearchForm apiUser={apiUser} onRepoOwnerChanged={setRepoOwner} />
+			<SearchForm apiUser={apiUser} onRepoOwnerChanged={processNewOwner} />
 			<UserActions onUserChanged={setApiUser} onAuthToken={setAuth} />
 		</div>
 		<ListTabs onTypeFilterSet={setTypeFilter} onStateFilterSet={setStateFilter} />
