@@ -182,30 +182,26 @@ export default function IssueList() {
 		}
 	}
 
-	let userActions;
-
-	if (apiUser) {
-		userActions = <>
+	const userActions = apiUser
+		? <>
 			{apiUser}
 			<button onClick={() => {
 				setAuth('');
 				setApiUser('');
 			}}>Sign-out</button>
+		</>
+		: <>
+			<button onClick={() => doAuth()}>Sign-in</button>
+			<div>
+				(<button
+					title="Only grant access to public repositories. Reduces the scope required, but will not show issues and pull requests in private repositories."
+					onClick={() => doAuth(true)}
+					className="link-button"
+				>
+					Grant public only
+				</button>)
+			</div>
 		</>;
-	} else {
-		userActions = <>
-		<button onClick={() => doAuth()}>Sign-in</button>
-		<div>
-			(<button
-				title="Only grant access to public repositories. Reduces the scope required, but will not show issues and pull requests in private repositories."
-				onClick={() => doAuth(true)}
-				className="link-button"
-			>
-				Grant public only
-			</button>)
-		</div>
-		</>;
-	}
 
 	return <div>
 		<div id="actions">
