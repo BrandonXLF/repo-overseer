@@ -1,5 +1,7 @@
 import { components } from "@octokit/openapi-types";
 import './Issue.css';
+import { ReactComponent as IssueIcon } from './issue.svg';
+import { ReactComponent as PrIcon } from './pr.svg';
 
 const repoRegex = /.*\/([^/]+\/[^/]+)$/;
 
@@ -17,6 +19,9 @@ export default function Issue({ item }: Readonly<{
 
 	return <div className="issue">
 		<div className="issue-repo">
+			{item.pull_request
+				? <PrIcon />
+				: <IssueIcon />}
 			<a href={`https://www.github.com/${repoName}`}>{repoName}</a>
 		</div>
 		<div className="issue-title">

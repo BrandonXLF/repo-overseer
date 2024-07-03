@@ -3,6 +3,18 @@
 	border-top: 1px solid var(--separator-color);
 }
 
+.issue-repo {
+	display: flex;
+	align-items: center;
+	gap: 0.35em;
+}
+
+.issue-repo svg {
+	width: unset;
+	height: 1.25em;
+	transform: translateY(1px);
+}
+
 .issue-repo a {
 	font-size: 85%;
 	color: var(--color-dim);
