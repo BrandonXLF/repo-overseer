@@ -221,30 +221,28 @@ export default function IssueList() {
 				{userActions}
 			</div>
 		</div>
-		{<div id="tabs-area">
-			<div id="tabs">
-				{types.map(type => <button
-					key={type.filter}
-					onClick={() => setTypeFilter(type.filter)}
-					className={classNames({
-						tab: true,
-						selected: type.filter === typeFilter
-					})}
-				>
-					{type.name}
-				</button>)}
-			</div>
-			<div id="filters">
-				<select
-					value={stateFilter}
-					onChange={e => setStateFilter(e.target.value)}
-				>
-					{states.map(state => <option key={state.filter} value={state.filter}>
-						{state.name}
-					</option>)}
-				</select>
-			</div>
-		</div>}
+		<div id="tabs">
+			{types.map(type => <button
+				key={type.filter}
+				onClick={() => setTypeFilter(type.filter)}
+				className={classNames({
+					tab: true,
+					selected: type.filter === typeFilter
+				})}
+			>
+				{type.name}
+			</button>)}
+			<div id="tab-filler" />
+			<select
+				className="tab"
+				value={stateFilter}
+				onChange={e => setStateFilter(e.target.value)}
+			>
+				{states.map(state => <option key={state.filter} value={state.filter}>
+					{state.name}
+				</option>)}
+			</select>
+		</div>
 		<div id="issue-list">
 			{listContents}
 		</div>

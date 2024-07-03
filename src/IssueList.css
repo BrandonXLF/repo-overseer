@@ -22,19 +22,14 @@
 	padding: 0;
 }
 
-#tabs-area {
-	margin-top: 2em;
-	display: flex;
-	justify-content: space-between;
-}
-
 #tabs {
+	margin-top: 2em;
 	display: flex;
 }
 
 .tab {
 	border: none;
-	background: none;
+	background: var(--background);
 	font: inherit;
 	padding: 4px 0.5em;
 	border-top: 1px solid transparent;
@@ -48,13 +43,9 @@
 	border-bottom: 1px solid transparent;
 }
 
-#filters {
+#tab-filler {
 	flex: 1;
 	border-bottom: 1px solid var(--tab-color);
-	display: flex;
-	align-items: center;
-	gap: 0.5em;
-	justify-content: right;
 }
 
 #issue-list {
