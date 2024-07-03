@@ -13,6 +13,11 @@
 	width: unset;
 	height: 1.25em;
 	transform: translateY(1px);
+	color: var(--color-dimmer);
+}
+
+.issue.open .issue-repo svg {
+	color: var(--button-background);
 }
 
 .issue-repo a {

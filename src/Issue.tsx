@@ -2,6 +2,7 @@ import { components } from "@octokit/openapi-types";
 import './Issue.css';
 import { ReactComponent as IssueIcon } from './issue.svg';
 import { ReactComponent as PrIcon } from './pr.svg';
+import classNames from "classnames";
 
 const repoRegex = /.*\/([^/]+\/[^/]+)$/;
 
@@ -17,7 +18,10 @@ export default function Issue({ item }: Readonly<{
 }>) {
 	const repoName = repoRegex.exec(item.repository_url)?.[1];
 
-	return <div className="issue">
+	return <div className={classNames({
+		issue: true,
+		open: item.state === 'open'
+	})}>
 		<div className="issue-repo">
 			{item.pull_request
 				? <PrIcon />
