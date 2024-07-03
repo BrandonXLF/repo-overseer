@@ -2,7 +2,7 @@
 	"name": "repo-overseer",
 	"version": "0.1.0",
 	"private": true,
-  	"homepage": "./",
+	"homepage": "./",
 	"dependencies": {
 		"@octokit/openapi-types": "^22.2.0",
 		"@octokit/request": "^9.1.1",

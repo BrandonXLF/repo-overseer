@@ -1,25 +1,33 @@
-import { request } from "@octokit/request";
-import { useEffect, useState } from "react";
+import { request } from '@octokit/request';
+import { useEffect, useState } from 'react';
 import './UserActions.css';
 
 async function doAuth(publicOnly?: boolean) {
-	window.open(`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&${publicOnly ? '' : 'scope=repo'}`);
+	window.open(
+		`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&${publicOnly ? '' : 'scope=repo'}`,
+	);
 }
 
-export default function UserActions({ onUserChanged, onAuthToken }: Readonly<{
+export default function UserActions({
+	onUserChanged,
+	onAuthToken,
+}: Readonly<{
 	onUserChanged: (apiUser: string) => void;
 	onAuthToken: (auth: string) => void;
 }>) {
-	const [auth, setAuth] = useState(() => localStorage.getItem('repo-overseer-auth') ?? '');
+	const [auth, setAuth] = useState(
+		() => localStorage.getItem('repo-overseer-auth') ?? '',
+	);
 	const [user, setUser] = useState('');
 
-	// Process OAuth callbacks 
+	// Process OAuth callbacks
 	useEffect(() => {
-		window.addEventListener('message', async e => {
+		window.addEventListener('message', async (e) => {
 			if (
 				e.origin !== window.location.origin ||
 				e.data.source !== 'github-auth'
-			) return;
+			)
+				return;
 
 			setAuth(`Bearer ${e.data.token}`);
 		});
@@ -35,8 +43,8 @@ export default function UserActions({ onUserChanged, onAuthToken }: Readonly<{
 		(async () => {
 			const res = await request('GET /user', {
 				headers: {
-					authorization: auth
-				}
+					authorization: auth,
+				},
 			});
 
 			setUser(res.data.login);
@@ -54,24 +62,32 @@ export default function UserActions({ onUserChanged, onAuthToken }: Readonly<{
 		onUserChanged(user);
 	}, [onUserChanged, user]);
 
-	return user
-		? <div>
+	return user ? (
+		<div>
 			{user}
-			<button onClick={() => {
-				setAuth('');
-				setUser('');
-			}}>Sign-out</button>
+			<button
+				onClick={() => {
+					setAuth('');
+					setUser('');
+				}}
+			>
+				Sign-out
+			</button>
 		</div>
-		: <div>
+	) : (
+		<div>
 			<button onClick={() => doAuth()}>Sign-in</button>
 			<div>
-				(<button
+				(
+				<button
 					title="Only grant access to public repositories. Reduces the scope required, but will not show issues and pull requests in private repositories."
 					onClick={() => doAuth(true)}
 					className="link-button"
 				>
 					Grant public only
-				</button>)
+				</button>
+				)
 			</div>
-		</div>;
+		</div>
+	);
 }

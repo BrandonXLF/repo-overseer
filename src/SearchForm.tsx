@@ -1,6 +1,9 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from 'react';
 
-export default function SearchForm({ apiUser, onRepoOwnerChanged }: Readonly<{
+export default function SearchForm({
+	apiUser,
+	onRepoOwnerChanged,
+}: Readonly<{
 	apiUser: string;
 	onRepoOwnerChanged: (repoOwner: string) => void;
 }>) {
@@ -9,13 +12,16 @@ export default function SearchForm({ apiUser, onRepoOwnerChanged }: Readonly<{
 	const processOwnerInput = useCallback(() => {
 		const repoOwner = inputRef.current?.value ?? '';
 		localStorage.setItem('repo-overseer-owner', repoOwner);
-		onRepoOwnerChanged(inputRef.current?.value ?? '')
+		onRepoOwnerChanged(inputRef.current?.value ?? '');
 	}, [onRepoOwnerChanged]);
 
-	const setOwnerInput = useCallback((newOwner: string) => {
-		inputRef.current!.value = newOwner;
-		processOwnerInput();
-	}, [processOwnerInput]);
+	const setOwnerInput = useCallback(
+		(newOwner: string) => {
+			inputRef.current!.value = newOwner;
+			processOwnerInput();
+		},
+		[processOwnerInput],
+	);
 
 	// Load saved repo owner
 	useEffect(() => {
@@ -28,14 +34,22 @@ export default function SearchForm({ apiUser, onRepoOwnerChanged }: Readonly<{
 	useEffect(() => {
 		if (inputRef.current!.value || !apiUser) return;
 		setOwnerInput(apiUser);
-	}, [apiUser, setOwnerInput])
+	}, [apiUser, setOwnerInput]);
 
-	return <form onSubmit={e => {
-		e.preventDefault();
-		processOwnerInput();
-	}}>
-		<input ref={inputRef} />
-		<button>Go</button>
-		{apiUser && <button onClick={() => setOwnerInput(apiUser)} type="button">Me</button>}
-	</form>;
+	return (
+		<form
+			onSubmit={(e) => {
+				e.preventDefault();
+				processOwnerInput();
+			}}
+		>
+			<input ref={inputRef} />
+			<button>Go</button>
+			{apiUser && (
+				<button onClick={() => setOwnerInput(apiUser)} type="button">
+					Me
+				</button>
+			)}
+		</form>
+	);
 }
