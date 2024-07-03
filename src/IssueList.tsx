@@ -108,7 +108,7 @@ export default function IssueList() {
 			<SearchForm apiUser={apiUser} onRepoOwnerChanged={processNewOwner} />
 			<UserActions onUserChanged={setApiUser} onAuthToken={setAuth} />
 		</div>
-		<ListTabs onTypeFilterSet={setTypeFilter} onStateFilterSet={setStateFilter} />
+		<ListTabs apiUser={apiUser} onTypeFilterSet={setTypeFilter} onStateFilterSet={setStateFilter} />
 		<div id="issue-list">
 			{listContents}
 		</div>

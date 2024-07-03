@@ -2,6 +2,8 @@ import classNames from "classnames";
 import { useEffect, useState } from "react";
 import './ListTabs.css';
 
+const separatorText = '-------------';
+
 const types = [
 	{
 		name: 'Combined',
@@ -23,18 +25,34 @@ const states = [
 		filter: 'is:open'
 	},
 	{
+		name: 'Unassigned',
+		filter: 'is:open no:assignee'
+	},
+	{
+		name: 'My tasks',
+		filter: 'is:open assignee:__ME__',
+		cond: (apiUser: string) => !!apiUser
+	},
+	{
+		separator: true
+	},
+	{
 		name: 'Closed',
 		filter: 'is:closed'
 	},
 	{
-		name: 'All',
+		separator: true
+	},
+	{
+		name: 'Everything',
 		filter: ''
 	}
 ];
 
-const defaultStateFilter = states[0].filter;
+const defaultStateFilter = states[0].filter as string;
 
-export default function ListTabs({ onTypeFilterSet, onStateFilterSet }: Readonly<{
+export default function ListTabs({ apiUser, onTypeFilterSet, onStateFilterSet }: Readonly<{
+	apiUser: string;
 	onTypeFilterSet: (typeFilter: string) => void;
 	onStateFilterSet: (stateFilter: string) => void;
 }>) {
@@ -63,11 +81,18 @@ export default function ListTabs({ onTypeFilterSet, onStateFilterSet }: Readonly
 		<select
 			className="tab"
 			defaultValue={defaultStateFilter}
-			onChange={e => onStateFilterSet(e.target.value)}
+			onChange={e => onStateFilterSet(e.target.value?.replace(/__ME__/, apiUser))}
 		>
-			{states.map(state => <option key={state.filter} value={state.filter}>
-				{state.name}
-			</option>)}
+			{states.map(state =>
+				(!state.cond || state.cond(apiUser))
+					? <option
+						key={state.filter}
+						value={state.filter}
+						disabled={state.separator}
+					>
+						{state.separator ? separatorText : state.name}
+					</option>
+					: '')}
 		</select>
 	</div>;
 }
