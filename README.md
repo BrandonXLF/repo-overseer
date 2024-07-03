@@ -14,7 +14,7 @@ node.js, npm, php
 
 ### Commands
 
-Install dependencies using `npm install`. Once installed, the app can be launched in development mode by running `npm start`. It can be viewed by opening [http://localhost:3000](http://localhost:3000) in your browser. To build a production build, run `npm run build`.
+Install dependencies using `npm install`. Once installed, the app can be launched in development mode by running `npm start`. It can be viewed by opening [http://localhost:3000](http://localhost:3000) in your browser. To build a production build, run `npm run build`. Use `npm run format` to format the code base.
 
 ### OAuth
 
