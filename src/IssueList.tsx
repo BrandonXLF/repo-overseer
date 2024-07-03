@@ -86,7 +86,9 @@ export default function IssueList() {
 			listContents = <div>Loading...</div>;
 			break;
 		case 'loaded':
-			listContents = list.items.map(item => <Issue key={item.id} item={item} />);
+			listContents = list.items.length
+				? list.items.map(item => <Issue key={item.id} item={item} />)
+				: <div>No results found.</div>
 			break;
 		case 'error': {
 			const resetTime = list.reset
