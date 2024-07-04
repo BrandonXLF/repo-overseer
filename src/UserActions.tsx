@@ -4,7 +4,7 @@ import './UserActions.css';
 
 async function doAuth(publicOnly?: boolean) {
 	window.open(
-		`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&${publicOnly ? '' : 'scope=repo'}`,
+		`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}${publicOnly ? '' : '&scope=repo'}`,
 	);
 }
 
