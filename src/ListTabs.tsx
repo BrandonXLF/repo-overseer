@@ -21,7 +21,7 @@ const types = [
 
 const states = [
 	{
-		name: 'Open',
+		name: 'All open',
 		filter: 'is:open',
 	},
 	{
