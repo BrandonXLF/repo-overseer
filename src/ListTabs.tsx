@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import './ListTabs.css';
 
 const separatorText = '-------------';
+const loggedIn = (apiUser: string) => !!apiUser;
 
 const types = [
 	{
@@ -31,7 +32,17 @@ const states = [
 	{
 		name: 'My tasks',
 		filter: 'is:open assignee:__ME__',
-		cond: (apiUser: string) => !!apiUser,
+		cond: loggedIn
+	},
+	{
+		name: 'By me',
+		filter: 'is:open author:__ME__',
+		cond: loggedIn
+	},
+	{
+		name: 'By others',
+		filter: 'is:open -author:__ME__',
+		cond: loggedIn
 	},
 	{
 		separator: true,
