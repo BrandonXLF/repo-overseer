@@ -22,7 +22,7 @@ export default function UserActions({
 
 	// Process OAuth callbacks
 	useEffect(() => {
-		window.addEventListener('message', async (e) => {
+		const onMessage = async (e: MessageEvent) => {
 			if (
 				e.origin !== window.location.origin ||
 				e.data.source !== 'github-auth'
@@ -30,8 +30,11 @@ export default function UserActions({
 				return;
 
 			setAuth(`Bearer ${e.data.token}`);
-		});
-	});
+		};
+
+		window.addEventListener('message', onMessage);
+		return () => window.removeEventListener('message', onMessage);
+	}, []);
 
 	// Update user when auth changes
 	useEffect(() => {
@@ -49,13 +52,13 @@ export default function UserActions({
 
 			setUser(res.data.login);
 		})();
-	}, [auth, setUser, setAuth]);
+	}, [auth]);
 
 	// Dispatch event and save authorization token
 	useEffect(() => {
 		onAuthToken(auth);
 		localStorage.setItem('repo-overseer-auth', auth);
-	}, [auth, onAuthToken]);
+	}, [onAuthToken, auth]);
 
 	// Dispatch user changed event
 	useEffect(() => {
