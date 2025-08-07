@@ -2,9 +2,14 @@ import { request } from '@octokit/request';
 import { useEffect, useState } from 'react';
 import './UserActions.css';
 
-async function doAuth(publicOnly?: boolean) {
+const modes = {
+	ALL: 'Public + private repos',
+	PUBLIC: 'Public repos only'
+};
+
+async function doAuth(allRepos?: boolean) {
 	window.open(
-		`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}${publicOnly ? '' : '&scope=repo'}`,
+		`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=${allRepos ? 'repo' : ''}`,
 	);
 }
 
@@ -15,8 +20,12 @@ export default function UserActions({
 	onUserChanged: (apiUser: string) => void;
 	onAuthToken: (auth: string) => void;
 }>) {
-	const [auth, setAuth] = useState(
-		() => localStorage.getItem('repo-overseer-auth') ?? '',
+	const [signInAllRepos, setSignInAllRepos] = useState(true);
+	const [auth, setAuth] = useState<{token: string, all: boolean} | undefined>(
+		() => ({
+			token: localStorage.getItem('repo-overseer-auth') ?? '',
+			all: !!localStorage.getItem('repo-overseer-all')
+		})
 	);
 	const [user, setUser] = useState('');
 
@@ -29,7 +38,10 @@ export default function UserActions({
 			)
 				return;
 
-			setAuth(`Bearer ${e.data.token}`);
+			setAuth({
+				token: `Bearer ${e.data.token}`,
+				all: e.data.scope.includes('repo')
+			});
 		};
 
 		window.addEventListener('message', onMessage);
@@ -39,14 +51,14 @@ export default function UserActions({
 	// Update user when auth changes
 	useEffect(() => {
 		if (!auth) {
-			setAuth('');
+			setUser('');
 			return;
 		}
 
 		(async () => {
 			const res = await request('GET /user', {
 				headers: {
-					authorization: auth,
+					authorization: auth.token,
 				},
 			});
 
@@ -56,8 +68,17 @@ export default function UserActions({
 
 	// Dispatch event and save authorization token
 	useEffect(() => {
-		onAuthToken(auth);
-		localStorage.setItem('repo-overseer-auth', auth);
+		const authToken = auth?.token ?? '';
+
+		onAuthToken(authToken);
+		localStorage.setItem('repo-overseer-auth', authToken);
+
+		if (auth?.all) {
+			localStorage.setItem('repo-overseer-all', 'true');
+		} else {
+			localStorage.removeItem('repo-overseer-all');
+		}
+
 	}, [onAuthToken, auth]);
 
 	// Dispatch user changed event
@@ -65,12 +86,13 @@ export default function UserActions({
 		onUserChanged(user);
 	}, [onUserChanged, user]);
 
-	return user ? (
+	return auth ? (
 		<div>
-			{user}
+			{user || 'Loading...'}{' '}
+			<span className="token-mode">({auth.all ? modes.ALL : modes.PUBLIC})</span>
 			<button
 				onClick={() => {
-					setAuth('');
+					setAuth(undefined);
 					setUser('');
 				}}
 			>
@@ -79,18 +101,11 @@ export default function UserActions({
 		</div>
 	) : (
 		<div>
-			<button onClick={() => doAuth()}>Sign-in</button>
-			<div>
-				(
-				<button
-					title="Only grant access to public repositories. Reduces the scope required, but will not show issues and pull requests in private repositories."
-					onClick={() => doAuth(true)}
-					className="link-button"
-				>
-					Grant public only
-				</button>
-				)
-			</div>
+			<select onChange={(e) => setSignInAllRepos(e.target.value === 'all')}>
+				<option value="all">{modes.ALL}</option>
+				<option value="public">{modes.PUBLIC}</option>
+			</select>
+			<button onClick={() => doAuth(signInAllRepos)}>Sign-in</button>
 		</div>
 	);
 }

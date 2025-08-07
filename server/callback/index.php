@@ -15,16 +15,18 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 	'client_secret' => $CLIENT_SECRET,
 	'code' => $_GET['code']
 ]));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
 $res = json_decode(curl_exec($ch));
+$scope_array = empty($res->scope) ? [] : explode(',', $res->scope)
 
 ?>
 
 <script>
 	window.opener.postMessage({
 		source: 'github-auth',
-		token: '<?php echo $res->access_token ?>'
+		token: '<?php echo $res->access_token ?>',
+		scope: <?php echo json_encode($scope_array) ?>
 	});
 
 	window.close();
