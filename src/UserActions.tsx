@@ -102,7 +102,9 @@ export default function UserActions({
 		</div>
 	) : (
 		<div>
-			<select onChange={(e) => setSignInAllRepos(e.target.value === 'all')}>
+			<select
+				onChange={(e) => setSignInAllRepos(e.target.value === 'all')}
+			>
 				<option value="all">{modes.ALL}</option>
 				<option value="public">{modes.PUBLIC}</option>
 			</select>

@@ -110,7 +110,11 @@ export default function ListTabs({
 							key={state.filter}
 							value={state.filter}
 							disabled={state.separator || loginRequired}
-							title={loginRequired ? 'Login to use this filter' : undefined}
+							title={
+								loginRequired
+									? 'Login to use this filter'
+									: undefined
+							}
 						>
 							{state.separator ? separatorText : state.name}
 						</option>

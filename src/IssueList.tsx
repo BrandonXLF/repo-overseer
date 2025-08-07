@@ -115,7 +115,10 @@ export default function IssueList() {
 	return (
 		<div>
 			<div id="actions">
-				<SearchForm apiUser={apiUser} onRepoOwnerChanged={processNewOwner} />
+				<SearchForm
+					apiUser={apiUser}
+					onRepoOwnerChanged={processNewOwner}
+				/>
 				<UserActions onUserChanged={setApiUser} onAuthToken={setAuth} />
 			</div>
 			<ListTabs
