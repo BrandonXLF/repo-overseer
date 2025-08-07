@@ -102,12 +102,12 @@ export default function ListTabs({
 					onStateFilterSet(e.target.value?.replace(/__ME__/, apiUser))
 				}
 			>
-				{states.map((state) => {
+				{states.map((state, i) => {
 					const loginRequired = state.requireLogin && !apiUser;
 
 					return (
 						<option
-							key={state.filter}
+							key={state.filter ?? i}
 							value={state.filter}
 							disabled={state.separator || loginRequired}
 							title={
