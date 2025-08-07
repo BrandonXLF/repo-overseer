@@ -13,6 +13,11 @@ async function doAuth(allRepos?: boolean) {
 	);
 }
 
+interface User {
+	name: string;
+	all: boolean;
+}
+
 export default function UserActions({
 	onUserChanged,
 	onAuthToken,
@@ -21,13 +26,10 @@ export default function UserActions({
 	onAuthToken: (auth: string) => void;
 }>) {
 	const [signInAllRepos, setSignInAllRepos] = useState(true);
-	const [auth, setAuth] = useState(() => {
-		const token = localStorage.getItem('repo-overseer-auth') ?? '';
-		const all = !!localStorage.getItem('repo-overseer-all');
-
-		return token ? { token, all } : undefined;
-	});
-	const [user, setUser] = useState('');
+	const [auth, setAuth] = useState(
+		() => localStorage.getItem('repo-overseer-auth') ?? '',
+	);
+	const [user, setUser] = useState<User | undefined>();
 
 	// Process OAuth callbacks
 	useEffect(() => {
@@ -38,10 +40,7 @@ export default function UserActions({
 			)
 				return;
 
-			setAuth({
-				token: `Bearer ${e.data.token}`,
-				all: e.data.scope.includes('repo'),
-			});
+			setAuth(`Bearer ${e.data.token}`);
 		};
 
 		window.addEventListener('message', onMessage);
@@ -51,50 +50,51 @@ export default function UserActions({
 	// Update user when auth changes
 	useEffect(() => {
 		if (!auth) {
-			setUser('');
+			setUser(undefined);
 			return;
 		}
 
 		(async () => {
 			const res = await request('GET /user', {
 				headers: {
-					authorization: auth.token,
+					authorization: auth,
 				},
 			});
 
-			setUser(res.data.login);
+			setUser({
+				name: res.data.login,
+				all: res.headers['x-oauth-scopes']?.includes('repo') ?? false,
+			});
 		})();
 	}, [auth]);
 
 	// Dispatch event and save authorization token
 	useEffect(() => {
-		const authToken = auth?.token ?? '';
-
-		onAuthToken(authToken);
-		localStorage.setItem('repo-overseer-auth', authToken);
-
-		if (auth?.all) {
-			localStorage.setItem('repo-overseer-all', 'true');
-		} else {
-			localStorage.removeItem('repo-overseer-all');
-		}
+		onAuthToken(auth);
+		localStorage.setItem('repo-overseer-auth', auth);
 	}, [onAuthToken, auth]);
 
 	// Dispatch user changed event
 	useEffect(() => {
-		onUserChanged(user);
+		onUserChanged(user?.name ?? '');
 	}, [onUserChanged, user]);
 
 	return auth ? (
 		<div>
-			{user || 'Loading...'}{' '}
-			<span className="token-mode">
-				({auth.all ? modes.ALL : modes.PUBLIC})
-			</span>
+			{user ? (
+				<>
+					{user.name ?? 'Loading...'}{' '}
+					<span className="token-mode">
+						({user.all ? modes.ALL : modes.PUBLIC})
+					</span>
+				</>
+			) : (
+				'Loading...'
+			)}
 			<button
 				onClick={() => {
-					setAuth(undefined);
-					setUser('');
+					setAuth('');
+					setUser(undefined);
 				}}
 			>
 				Sign-out
