@@ -4,6 +4,11 @@ include '../../.config.php';
 
 $ch = curl_init();
 
+if (!isset($_GET['code'])) {
+	http_response_code(400);
+	die('<script>window.close();</script>');
+}
+
 curl_setopt($ch, CURLOPT_URL, 'https://github.com/login/oauth/access_token');
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
