@@ -2,6 +2,8 @@ import { request } from '@octokit/request';
 import { useEffect, useState } from 'react';
 import './UserActions.css';
 
+const ALL_SCOPE = 'repo';
+
 const modes = {
 	ALL: 'Public + private repos',
 	PUBLIC: 'Public repos only',
@@ -9,7 +11,7 @@ const modes = {
 
 async function doAuth(allRepos?: boolean) {
 	window.open(
-		`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=${allRepos ? 'repo' : ''}`,
+		`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=${allRepos ? ALL_SCOPE : ''}`,
 	);
 }
 
@@ -63,7 +65,10 @@ export default function UserActions({
 
 			setUser({
 				name: res.data.login,
-				all: res.headers['x-oauth-scopes']?.includes('repo') ?? false,
+				all:
+					res.headers['x-oauth-scopes']
+						?.split(',')
+						.includes(ALL_SCOPE) ?? false,
 			});
 		})();
 	}, [auth]);
