@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import './ListTabs.css';
 
 const separatorText = '-------------';
-const loggedIn = (apiUser: string) => !!apiUser;
 
 const types = [
 	{
@@ -32,17 +31,17 @@ const states = [
 	{
 		name: 'My tasks',
 		filter: 'is:open assignee:__ME__',
-		cond: loggedIn
+		requireLogin: true,
 	},
 	{
 		name: 'By me',
 		filter: 'is:open author:__ME__',
-		cond: loggedIn
+		requireLogin: true,
 	},
 	{
 		name: 'By others',
 		filter: 'is:open -author:__ME__',
-		cond: loggedIn
+		requireLogin: true,
 	},
 	{
 		separator: true,
@@ -103,19 +102,20 @@ export default function ListTabs({
 					onStateFilterSet(e.target.value?.replace(/__ME__/, apiUser))
 				}
 			>
-				{states.map((state) =>
-					!state.cond || state.cond(apiUser) ? (
+				{states.map((state) => {
+					const loginRequired = state.requireLogin && !apiUser;
+
+					return (
 						<option
 							key={state.filter}
 							value={state.filter}
-							disabled={state.separator}
+							disabled={state.separator || loginRequired}
+							title={loginRequired ? 'Login to use this filter' : undefined}
 						>
 							{state.separator ? separatorText : state.name}
 						</option>
-					) : (
-						''
-					),
-				)}
+					);
+				})}
 			</select>
 		</div>
 	);
