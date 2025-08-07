@@ -4,7 +4,7 @@ import './UserActions.css';
 
 const modes = {
 	ALL: 'Public + private repos',
-	PUBLIC: 'Public repos only'
+	PUBLIC: 'Public repos only',
 };
 
 async function doAuth(allRepos?: boolean) {
@@ -21,12 +21,12 @@ export default function UserActions({
 	onAuthToken: (auth: string) => void;
 }>) {
 	const [signInAllRepos, setSignInAllRepos] = useState(true);
-	const [auth, setAuth] = useState<{token: string, all: boolean} | undefined>(
-		() => ({
-			token: localStorage.getItem('repo-overseer-auth') ?? '',
-			all: !!localStorage.getItem('repo-overseer-all')
-		})
-	);
+	const [auth, setAuth] = useState(() => {
+		const token = localStorage.getItem('repo-overseer-auth') ?? '';
+		const all = !!localStorage.getItem('repo-overseer-all');
+
+		return token ? { token, all } : undefined;
+	});
 	const [user, setUser] = useState('');
 
 	// Process OAuth callbacks
@@ -40,7 +40,7 @@ export default function UserActions({
 
 			setAuth({
 				token: `Bearer ${e.data.token}`,
-				all: e.data.scope.includes('repo')
+				all: e.data.scope.includes('repo'),
 			});
 		};
 
@@ -78,7 +78,6 @@ export default function UserActions({
 		} else {
 			localStorage.removeItem('repo-overseer-all');
 		}
-
 	}, [onAuthToken, auth]);
 
 	// Dispatch user changed event
@@ -89,7 +88,9 @@ export default function UserActions({
 	return auth ? (
 		<div>
 			{user || 'Loading...'}{' '}
-			<span className="token-mode">({auth.all ? modes.ALL : modes.PUBLIC})</span>
+			<span className="token-mode">
+				({auth.all ? modes.ALL : modes.PUBLIC})
+			</span>
 			<button
 				onClick={() => {
 					setAuth(undefined);
