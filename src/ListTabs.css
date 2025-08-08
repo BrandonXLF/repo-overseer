@@ -1,5 +1,4 @@
-#tabs {
-	margin-top: 2em;
+.list-tabs {
 	display: flex;
 }
 
@@ -23,7 +22,7 @@ select.tab {
 	border-bottom: 1px solid transparent;
 }
 
-#tab-filler {
+.tab-filler {
 	flex: 1;
 	border-bottom: 1px solid var(--tab-color);
 }

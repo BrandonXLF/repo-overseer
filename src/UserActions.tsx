@@ -1,6 +1,7 @@
 import { request } from '@octokit/request';
 import { useEffect, useState } from 'react';
 import './UserActions.css';
+import './TopActions.css';
 
 const ALL_SCOPE = 'repo';
 
@@ -84,36 +85,44 @@ export default function UserActions({
 		onUserChanged(user?.name ?? '');
 	}, [onUserChanged, user]);
 
-	return auth ? (
-		<div>
-			{user ? (
+	return (
+		<div className="top-actions">
+			{auth ? (
 				<>
-					{user.name ?? 'Loading...'}{' '}
-					<span className="token-mode">
-						({user.all ? modes.ALL : modes.PUBLIC})
-					</span>
+					{user ? (
+						<>
+							<span>{user.name ?? 'Loading...'}</span>
+							<span className="token-mode">
+								({user.all ? modes.ALL : modes.PUBLIC})
+							</span>
+						</>
+					) : (
+						'Loading...'
+					)}
+					<button
+						onClick={() => {
+							setAuth('');
+							setUser(undefined);
+						}}
+					>
+						Sign-out
+					</button>
 				</>
 			) : (
-				'Loading...'
+				<>
+					<select
+						onChange={(e) =>
+							setSignInAllRepos(e.target.value === 'all')
+						}
+					>
+						<option value="all">{modes.ALL}</option>
+						<option value="public">{modes.PUBLIC}</option>
+					</select>
+					<button onClick={() => doAuth(signInAllRepos)}>
+						Sign-in
+					</button>
+				</>
 			)}
-			<button
-				onClick={() => {
-					setAuth('');
-					setUser(undefined);
-				}}
-			>
-				Sign-out
-			</button>
-		</div>
-	) : (
-		<div>
-			<select
-				onChange={(e) => setSignInAllRepos(e.target.value === 'all')}
-			>
-				<option value="all">{modes.ALL}</option>
-				<option value="public">{modes.PUBLIC}</option>
-			</select>
-			<button onClick={() => doAuth(signInAllRepos)}>Sign-in</button>
 		</div>
 	);
 }

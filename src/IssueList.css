@@ -1,29 +1,10 @@
-#actions {
-	display: flex;
-	justify-content: space-between;
-	flex-wrap: wrap-reverse;
-	column-gap: 0.5em;
-	row-gap: 0.75em;
-	align-items: center;
-}
-
-#actions > * {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5em;
-	align-items: center;
-}
-
-#issue-list {
+.issue-list-items {
 	display: flex;
 	flex-direction: column;
 	gap: 0.75em;
-	margin-top: 1em;
 }
 
-.error-title {
-	margin: 0 0 1rem 0;
-	color: #cf2b2b;
-	font-size: 125%;
-	font-weight: bold;
+.issue-list-next-status,
+.issue-list-next {
+	margin-top: 1em;
 }

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import './TopActions.css';
 
 export default function SearchForm({
 	apiUser,
@@ -38,6 +39,7 @@ export default function SearchForm({
 
 	return (
 		<form
+			className="top-actions"
 			onSubmit={(e) => {
 				e.preventDefault();
 				processOwnerInput();

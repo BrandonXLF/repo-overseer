@@ -81,7 +81,7 @@ export default function ListTabs({
 	}, [onTypeFilterSet, typeFilter]);
 
 	return (
-		<div id="tabs">
+		<div className="list-tabs">
 			{types.map((type) => (
 				<button
 					key={type.filter}
@@ -94,7 +94,7 @@ export default function ListTabs({
 					{type.name}
 				</button>
 			))}
-			<div id="tab-filler" />
+			<div className="tab-filler" />
 			<select
 				className="tab"
 				defaultValue={defaultStateFilter}

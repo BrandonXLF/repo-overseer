@@ -1,4 +1,4 @@
-import IssueList from './IssueList';
+import ListArea from './ListArea';
 import Title from './Title';
 import './App.css';
 import Footer from './Footer';
@@ -7,7 +7,7 @@ function App() {
 	return (
 		<main>
 			<Title />
-			<IssueList />
+			<ListArea />
 			<Footer />
 		</main>
 	);
