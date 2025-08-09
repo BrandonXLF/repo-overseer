@@ -111,6 +111,7 @@ export default function UserActions({
 			) : (
 				<>
 					<select
+						value={signInAllRepos ? 'all' : 'public'}
 						onChange={(e) =>
 							setSignInAllRepos(e.target.value === 'all')
 						}
